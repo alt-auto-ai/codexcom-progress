@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CODEXCOM lean roadmap: reuse native Codex, deliver useful capabilities, fix observed issues and grow a cooperating organization.">
+  <title>CODEXCOM · Project map</title>
+  <style>
+    :root { color-scheme:dark; --paper:#111714; --ink:#e1e9e3; --muted:#9ba89f; --green:#7bc99e; --pale:#1b3025; --grey:#414d45; --later:#89958d; --amber:#e5b86d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    .wrap { max-width:1180px; margin:auto; padding:36px 40px 24px; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:24px; }
+    h1 { margin:0; font-size:22px; font-weight:600; letter-spacing:-.6px; }
+    h1 span { color:var(--muted); font-weight:400; margin-left:10px; }
+    .legend { display:flex; gap:18px; font-size:12px; color:var(--muted); }
+    .legend span { display:flex; align-items:center; gap:7px; white-space:nowrap; }
+    .legend i { width:8px; height:8px; background:var(--green); border-radius:50%; }
+    .legend .now { background:var(--amber); } .legend .later { background:var(--grey); }
+    .hint { margin:10px 0 0; font-size:12px; color:var(--muted); }
+    .map { position:relative; margin:26px 0 18px; }
+    .routes { position:absolute; inset:0; width:100%; height:1300px; pointer-events:none; }
+    .routes path { fill:none; stroke-width:1.5; vector-effect:non-scaling-stroke; }
+    .travelled { stroke:var(--green); } .active-route { stroke:var(--amber); }
+    .unexplored { stroke:var(--grey); stroke-dasharray:4 6; }
+    .stages { position:relative; height:1300px; list-style:none; padding:0; margin:0; }
+    .point { position:absolute; left:var(--x); top:var(--y); width:180px; transform:translate(-50%,-26px); }
+    .node { appearance:none; border:0; background:none; color:inherit; font:inherit; text-align:center; padding:0; cursor:pointer; width:100%; position:relative; }
+    .orb { display:grid; place-items:center; width:52px; height:52px; margin:0 auto 13px; border:1px solid var(--grey); border-radius:50%; background:var(--paper); color:var(--later); font-size:13px; font-weight:500; }
+    .done .orb { background:var(--pale); border-color:var(--green); color:var(--green); }
+    .current .orb { background:#302719; border:2px solid var(--amber); color:var(--amber); outline:5px solid var(--paper); box-shadow:0 0 0 6px #695337; }
+    .name { display:block; font-size:14px; font-weight:550; line-height:1.35; }
+    .level { display:block; margin-top:4px; font-size:11px; color:var(--muted); }
+    .future .name, .future .level { color:var(--later); } .current .level { color:var(--amber); }
+    .substage { width:88px; transform:translate(-50%,-22px); }
+    .substage .node { padding-top:12px; min-height:44px; }
+    .substage .orb { width:20px; height:20px; margin-bottom:16px; font-size:10px; }
+    .substage .name { font-size:10px; font-weight:400; }
+    .substage .level { display:none; }
+    .substage.current .orb { outline-width:3px; box-shadow:0 0 0 4px #695337; }
+    .right-edge .name { position:absolute; top:14px; right:60px; width:110px; text-align:right; }
+    .left-edge .name { position:absolute; top:14px; left:60px; width:110px; text-align:left; }
+    .node:focus-visible { outline:none; } .node:focus-visible .orb { outline:3px solid var(--ink); outline-offset:5px; }
+    .point:has(.node:hover), .point:has(.node:focus), .point:has(.node.open) { z-index:3; }
+    .tip { position:absolute; top:calc(100% + 12px); left:50%; transform:translateX(-50%); width:270px; max-width:calc(100vw - 48px); padding:14px 16px; border:1px solid #3a4940; border-radius:10px; background:#202b24; box-shadow:0 8px 24px #00000055; color:var(--ink); text-align:left; font-size:12px; line-height:1.65; visibility:hidden; opacity:0; cursor:default; }
+    .tip strong { display:block; margin-bottom:5px; font-weight:600; } .tip > span { display:block; }
+    .tip::before { content:""; position:absolute; left:0; right:0; top:-14px; height:14px; }
+    .right-edge .tip { left:auto; right:0; transform:none; } .left-edge .tip { left:0; transform:none; }
+    .node:hover .tip, .node:focus .tip, .node.open .tip { visibility:visible; opacity:1; }
+    .node.dismissed .tip { visibility:hidden; opacity:0; }
+    footer { border-top:1px solid #2d3931; padding-top:18px; display:flex; justify-content:space-between; gap:16px; font-size:11px; color:var(--muted); }
+    footer p { margin:0; } nav { display:flex; flex-wrap:wrap; gap:12px 18px; } a { color:inherit; text-underline-offset:3px; }
+    a:focus-visible { outline:2px solid var(--green); outline-offset:4px; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+    @media (max-width:1000px) {
+      .wrap { padding:24px; max-width:520px; } header { display:block; } h1 { font-size:20px; }
+      .legend { margin-top:18px; } .hint { margin-top:14px; } .map { margin-top:28px; } .routes { display:none; }
+      .stages { height:auto; } .point { position:relative; left:auto; top:auto; transform:none; width:100%; height:120px; }
+      .point:not(:last-child)::after { content:""; position:absolute; top:52px; left:26px; height:68px; border-left:1.5px dashed var(--grey); }
+      .point.done::after { border-left-style:solid; border-color:var(--green); }
+      .point.current::after { border-left-style:solid; border-color:var(--amber); }
+      .node { display:grid; grid-template-columns:52px 1fr; grid-template-rows:auto auto; column-gap:20px; text-align:left; min-height:52px; }
+      .orb { grid-row:1 / 3; margin:0; } .name { align-self:end; } .level { align-self:start; }
+      .substage { height:80px; } .substage .node { padding:0; min-height:44px; grid-template-rows:44px; }
+      .substage .orb { grid-row:1; margin:0 auto; align-self:center; } .substage .name { font-size:12px; align-self:center; }
+      .substage::before { content:""; position:absolute; top:0; left:26px; height:12px; border-left:1.5px dashed var(--grey); }
+      .substage.done::before, .substage.current::before { border-left-style:solid; border-color:var(--green); }
+      .substage:not(:last-child)::after { top:32px; height:48px; }
+      .right-edge .name, .left-edge .name { position:static; width:auto; text-align:left; }
+      .tip, .right-edge .tip, .left-edge .tip { left:0; right:auto; top:calc(100% + 12px); transform:none; width:100%; max-width:none; }
+      footer { flex-direction:column; }
+    }
+    @media print { .tip,.hint { display:none; } .wrap { padding:10px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>CODEXCOM<span>Project map</span></h1>
+      <div class="legend" aria-label="Map legend"><span><i></i>Achieved</span><span><i class="now"></i>Current</span><span><i class="later"></i>Later</span></div>
+    </header>
+    <p class="hint">Use native capabilities → deliver useful work → fix observed issues → repeat.</p>
+    <p class="hint">A2.5 accepted with timing qualification · Native status is implemented; cross-machine qualification is next. Large circles are stages; small circles are steps. Hover, focus or tap for details.</p>
+    <main class="map" aria-label="Project roadmap">
+      <svg class="routes" viewBox="0 0 1000 1300" preserveAspectRatio="none" aria-hidden="true">
+        <path class="travelled" d="M150 80 H850"/>
+        <path class="travelled" d="M850 80 C980 80 980 300 850 300"/>
+        <path class="travelled" d="M850 300 H150"/>
+        <path class="travelled" d="M150 300 C20 300 20 520 150 520"/>
+        <path class="travelled" d="M150 520 H850"/>
+        <path class="travelled" d="M850 520 C980 520 980 740 850 740"/>
+        <path class="travelled" d="M850 740 H750.0"/>
+        <path class="travelled" d="M750.0 740 H650.0"/>
+        <path class="travelled" d="M650.0 740 H150"/>
+        <path class="unexplored" d="M150 740 C20 740 20 960 150 960"/>
+        <path class="unexplored" d="M150 960 H850"/>
+        <path class="unexplored" d="M850 960 C980 960 980 1180 850 1180"/>
+        <path class="unexplored" d="M850 1180 H150"/>
+      </svg>
+      <ol class="stages">
+        <li class="point stage done " style="--x:15.0000%;--y:80px">
+          <button class="node" type="button" aria-describedby="detail-01">
+            <span class="orb" aria-hidden="true">01</span>
+            <span class="name">Connected agents<span class="sr-only"> — Achieved</span></span>
+            <span class="level">Foundation</span>
+            <span class="tip" id="detail-01" role="tooltip"><strong>Connected agents</strong><span>Achieved · Agents on Ubuntu and Windows can exchange tasks and results while retaining their own identities, workspaces and conversations.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:38.3333%;--y:80px">
+          <button class="node" type="button" aria-describedby="detail-01-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Keep context<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-01-1" role="tooltip"><strong>Keep context</strong><span>Achieved · Agents retain their conversation identity and history across delegated work.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:61.6667%;--y:80px">
+          <button class="node" type="button" aria-describedby="detail-01-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Handle approvals<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-01-2" role="tooltip"><strong>Handle approvals</strong><span>Achieved · Agents can request human decisions while long-running work remains observed.</span></span>
+          </button>
+        </li>
+        <li class="point stage done " style="--x:85.0000%;--y:80px">
+          <button class="node" type="button" aria-describedby="detail-02">
+            <span class="orb" aria-hidden="true">02</span>
+            <span class="name">Long-running work<span class="sr-only"> — Achieved</span></span>
+            <span class="level">A1</span>
+            <span class="tip" id="detail-02" role="tooltip"><strong>Long-running work</strong><span>Achieved · Agents can collaborate on work lasting more than 26 minutes, including human approvals along the way.</span></span>
+          </button>
+        </li>
+        <li class="point substage done right-edge" style="--x:94.6525%;--y:173.555px">
+          <button class="node" type="button" aria-describedby="detail-02-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Split the work<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-02-1" role="tooltip"><strong>Split the work</strong><span>Achieved · Separate agents take responsibility for distinct contributions to one goal.</span></span>
+          </button>
+        </li>
+        <li class="point substage done right-edge" style="--x:92.8624%;--y:257.91488px">
+          <button class="node" type="button" aria-describedby="detail-02-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Work together<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-02-2" role="tooltip"><strong>Work together</strong><span>Achieved · Independent development overlaps in time, with both contributions retained.</span></span>
+          </button>
+        </li>
+        <li class="point stage done " style="--x:85.0000%;--y:300px">
+          <button class="node" type="button" aria-describedby="detail-03">
+            <span class="orb" aria-hidden="true">03</span>
+            <span class="name">Parallel development<span class="sr-only"> — Achieved</span></span>
+            <span class="level">A2.1</span>
+            <span class="tip" id="detail-03" role="tooltip"><strong>Parallel development</strong><span>Achieved · Agents can work on different parts of the same goal at the same time and combine their contributions.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:61.6667%;--y:300px">
+          <button class="node" type="button" aria-describedby="detail-03-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Share findings<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-03-1" role="tooltip"><strong>Share findings</strong><span>Achieved · Agents exchange investigation results that another agent can use.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:38.3333%;--y:300px">
+          <button class="node" type="button" aria-describedby="detail-03-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Resolve dependencies<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-03-2" role="tooltip"><strong>Resolve dependencies</strong><span>Achieved · A coordinator uses those findings to guide the next dependent task round.</span></span>
+          </button>
+        </li>
+        <li class="point stage done " style="--x:15.0000%;--y:300px">
+          <button class="node" type="button" aria-describedby="detail-04">
+            <span class="orb" aria-hidden="true">04</span>
+            <span class="name">Interdependent work<span class="sr-only"> — Achieved</span></span>
+            <span class="level">A2.2</span>
+            <span class="tip" id="detail-04" role="tooltip"><strong>Interdependent work</strong><span>Achieved · One agent can investigate a question, share findings and help another agent complete dependent work.</span></span>
+          </button>
+        </li>
+        <li class="point substage done left-edge" style="--x:5.3475%;--y:393.55500000000006px">
+          <button class="node" type="button" aria-describedby="detail-04-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Add a specialist<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-04-1" role="tooltip"><strong>Add a specialist</strong><span>Achieved · A third agent has its own identity, workspace and conversation.</span></span>
+          </button>
+        </li>
+        <li class="point substage done left-edge" style="--x:7.1376%;--y:477.91488px">
+          <button class="node" type="button" aria-describedby="detail-04-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Combine contributions<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-04-2" role="tooltip"><strong>Combine contributions</strong><span>Achieved · Three agents contribute to a shared feature and validate it across platforms.</span></span>
+          </button>
+        </li>
+        <li class="point stage done " style="--x:15.0000%;--y:520px">
+          <button class="node" type="button" aria-describedby="detail-05">
+            <span class="orb" aria-hidden="true">05</span>
+            <span class="name">Three-agent delivery<span class="sr-only"> — Achieved</span></span>
+            <span class="level">A2.3</span>
+            <span class="tip" id="detail-05" role="tooltip"><strong>Three-agent delivery</strong><span>Achieved · Three agents have delivered one useful feature together, with coordination, review and checks on both operating systems.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:38.3333%;--y:520px">
+          <button class="node" type="button" aria-describedby="detail-05-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Delegate a review<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-05-1" role="tooltip"><strong>Delegate a review</strong><span>Achieved · A specialist sends a review request to another permitted agent.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:61.6667%;--y:520px">
+          <button class="node" type="button" aria-describedby="detail-05-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Use the answer<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-05-2" role="tooltip"><strong>Use the answer</strong><span>Achieved · The specialist reads the correlated result and uses it within its active turn.</span></span>
+          </button>
+        </li>
+        <li class="point stage done " style="--x:85.0000%;--y:520px">
+          <button class="node" type="button" aria-describedby="detail-06">
+            <span class="orb" aria-hidden="true">06</span>
+            <span class="name">Specialist initiative<span class="sr-only"> — Achieved</span></span>
+            <span class="level">A2.4</span>
+            <span class="tip" id="detail-06" role="tooltip"><strong>Specialist initiative</strong><span>Achieved · A specialist can ask another agent for help and use the answer before finishing its own turn.</span></span>
+          </button>
+        </li>
+        <li class="point substage done right-edge" style="--x:94.6525%;--y:613.5550000000001px">
+          <button class="node" type="button" aria-describedby="detail-06-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Track delegation<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-06-1" role="tooltip"><strong>Track delegation</strong><span>Achieved · The coordinator can track the outcome of delegated work and keep it linked to the original request.</span></span>
+          </button>
+        </li>
+        <li class="point substage done right-edge" style="--x:92.8624%;--y:697.91488px">
+          <button class="node" type="button" aria-describedby="detail-06-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Preserve outcomes<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-06-2" role="tooltip"><strong>Preserve outcomes</strong><span>Achieved · Task cancellation and acknowledgements have been closed out while preserving conversations and prior work.</span></span>
+          </button>
+        </li>
+        <li class="point stage done " style="--x:85.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07">
+            <span class="orb" aria-hidden="true">07</span>
+            <span class="name">Result-driven continuation<span class="sr-only"> — Achieved</span></span>
+            <span class="level">A2.5 · Accepted with qualification</span>
+            <span class="tip" id="detail-07" role="tooltip"><strong>Result-driven continuation</strong><span>Accepted with qualification · A complete peer result led to a new turn in the same initiating conversation and a useful outcome. An additional review-timing condition was retired; the original qualification remains recorded.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:75.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07-1">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Hand off work<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-07-1" role="tooltip"><strong>Hand off work</strong><span>Achieved · An initiating agent delegates useful work and finishes its first turn while the independent review proceeds.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:65.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07-2">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Start native work<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-07-2" role="tooltip"><strong>Start native work</strong><span>Achieved · Native Codex execution on Ubuntu and Windows produced correlated tasks, turns and results.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:55.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07-3">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Review a real fix<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-07-3" role="tooltip"><strong>Review a real fix</strong><span>Achieved · A specialist reviewed a real correction and returned complete findings. Review work can overlap the initiating agent’s first turn.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:45.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07-4">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Return findings<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-07-4" role="tooltip"><strong>Return findings</strong><span>Achieved · Complete correlated findings were delivered and acknowledged after the initiating turn ended.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:35.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07-5">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Resume the owner<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-07-5" role="tooltip"><strong>Resume the owner</strong><span>Achieved · A new turn in the original conversation used the peer findings in useful operator guidance.</span></span>
+          </button>
+        </li>
+        <li class="point substage done " style="--x:25.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-07-6">
+            <span class="orb" aria-hidden="true">✓</span>
+            <span class="name">Accept the work<span class="sr-only"> — Achieved</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-07-6" role="tooltip"><strong>Accept the work</strong><span>Achieved · Useful result use, owning acknowledgements and source integration were verified. Historical evidence remains preserved.</span></span>
+          </button>
+        </li>
+        <li class="point stage current " style="--x:15.0000%;--y:740px">
+          <button class="node" type="button" aria-describedby="detail-08" aria-current="step">
+            <span class="orb" aria-hidden="true">08</span>
+            <span class="name">See native progress<span class="sr-only"> — In progress</span></span>
+            <span class="level">Native events and results</span>
+            <span class="tip" id="detail-08" role="tooltip"><strong>See native progress</strong><span>Current · Native progress reporting is implemented and tested offline on Ubuntu and Windows. Short cross-machine communication and recovery checks are next; live activation of this status change is not yet established.</span></span>
+          </button>
+        </li>
+        <li class="point substage current left-edge" style="--x:5.3475%;--y:833.5550000000001px">
+          <button class="node" type="button" aria-describedby="detail-08-1">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Show why waiting<span class="sr-only"> — In progress</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-08-1" role="tooltip"><strong>Show why waiting</strong><span>Current · The status projection distinguishes native queued, running, approval-waiting and terminal observations from result delivery. Missing evidence remains unknown. Live qualification is pending.</span></span>
+          </button>
+        </li>
+        <li class="point substage future left-edge" style="--x:7.1376%;--y:917.91488px">
+          <button class="node" type="button" aria-describedby="detail-08-2">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Surface requests<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-08-2" role="tooltip"><strong>Surface requests</strong><span>Later · Expose the next human interaction needed by a useful task, with its native request identity and scope.</span></span>
+          </button>
+        </li>
+        <li class="point stage future " style="--x:15.0000%;--y:960px">
+          <button class="node" type="button" aria-describedby="detail-09">
+            <span class="orb" aria-hidden="true">09</span>
+            <span class="name">Ask and continue<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level">Native human interaction</span>
+            <span class="tip" id="detail-09" role="tooltip"><strong>Ask and continue</strong><span>Later · Let work obtain a clarification or scoped decision and proceed correctly. Add the next needed native interaction; distinguish declining an action from cancelling the whole task.</span></span>
+          </button>
+        </li>
+        <li class="point substage future " style="--x:38.3333%;--y:960px">
+          <button class="node" type="button" aria-describedby="detail-09-1">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Route dependencies<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-09-1" role="tooltip"><strong>Route dependencies</strong><span>Later · Link dependent tasks, results and continuations durably. Keep the authorized assignment and room context clear across machines.</span></span>
+          </button>
+        </li>
+        <li class="point substage future " style="--x:61.6667%;--y:960px">
+          <button class="node" type="button" aria-describedby="detail-09-2">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Review and integrate<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-09-2" role="tooltip"><strong>Review and integrate</strong><span>Later · Reuse result-driven continuation to review and combine contributions to a small interdependent feature.</span></span>
+          </button>
+        </li>
+        <li class="point stage future " style="--x:85.0000%;--y:960px">
+          <button class="node" type="button" aria-describedby="detail-10">
+            <span class="orb" aria-hidden="true">10</span>
+            <span class="name">Coordinate dependencies<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level">Organizational autonomy</span>
+            <span class="tip" id="detail-10" role="tooltip"><strong>Coordinate dependencies</strong><span>Later · Agents deliver dependent contributions with less routine human relaying. CODEXCOM supplies distributed coordination while native Codex executes each agent’s work.</span></span>
+          </button>
+        </li>
+        <li class="point substage future right-edge" style="--x:94.6525%;--y:1053.555px">
+          <button class="node" type="button" aria-describedby="detail-10-1">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Drain safely<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-10-1" role="tooltip"><strong>Drain safely</strong><span>Later · Stop taking new work without cancelling active work. Keep maintenance holds and emergency interruption distinct.</span></span>
+          </button>
+        </li>
+        <li class="point substage future right-edge" style="--x:92.8624%;--y:1137.91488px">
+          <button class="node" type="button" aria-describedby="detail-10-2">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Resume owned work<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-10-2" role="tooltip"><strong>Resume owned work</strong><span>Later · Resolve a demonstrated interruption using supported native mechanisms, preserved ownership and truthful state. Historical uncertain work is never a test fixture.</span></span>
+          </button>
+        </li>
+        <li class="point stage future " style="--x:85.0000%;--y:1180px">
+          <button class="node" type="button" aria-describedby="detail-11">
+            <span class="orb" aria-hidden="true">11</span>
+            <span class="name">Operate reliably<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level">Operational autonomy</span>
+            <span class="tip" id="detail-11" role="tooltip"><strong>Operate reliably</strong><span>Later · Address one observed maintenance or platform issue at a time. Preserve work through ordinary interruptions; introduce unattended operation when real workloads need it.</span></span>
+          </button>
+        </li>
+        <li class="point substage future " style="--x:61.6667%;--y:1180px">
+          <button class="node" type="button" aria-describedby="detail-11-1">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">See projects<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-11-1" role="tooltip"><strong>See projects</strong><span>Later · Give people an authenticated view of teams, contributions, dependencies and conversation history using established coordination data.</span></span>
+          </button>
+        </li>
+        <li class="point substage future " style="--x:38.3333%;--y:1180px">
+          <button class="node" type="button" aria-describedby="detail-11-2">
+            <span class="orb" aria-hidden="true">•</span>
+            <span class="name">Decide anywhere<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level"></span>
+            <span class="tip" id="detail-11-2" role="tooltip"><strong>Decide anywhere</strong><span>Later · Support instructions and scoped decisions across desktop, web and mobile. Verify actual conversation continuity as each client is added.</span></span>
+          </button>
+        </li>
+        <li class="point stage future " style="--x:15.0000%;--y:1180px">
+          <button class="node" type="button" aria-describedby="detail-12">
+            <span class="orb" aria-hidden="true">12</span>
+            <span class="name">Cooperating organization<span class="sr-only"> — Not yet demonstrated</span></span>
+            <span class="level">Team oversight · Project vision</span>
+            <span class="tip" id="detail-12" role="tooltip"><strong>Cooperating organization</strong><span>Later · Independent specialist teams deliver larger projects across machines with little routine human coordination. People guide objectives and consequential decisions through shared oversight.</span></span>
+          </button>
+        </li>
+      </ol>
+    </main>
+    <footer>
+      <p>2 Nov 2026 · Milestone snapshot; not live runtime status.</p>
+      <p>Updated at milestone checkpoints.</p>
+    </footer>
+  </div>
+  <script>
+    const nodes = document.querySelectorAll('.node');
+    function closeTips() {
+      nodes.forEach(node => { node.classList.remove('open'); node.classList.add('dismissed'); });
+    }
+    nodes.forEach(node => {
+      node.addEventListener('pointerenter', () => node.classList.remove('dismissed'));
+      node.addEventListener('focus', () => { closeTips(); node.classList.remove('dismissed'); });
+      node.addEventListener('click', () => {
+        const wasOpen = node.classList.contains('open');
+        closeTips();
+        if (!wasOpen) { node.classList.remove('dismissed'); node.classList.add('open'); }
+      });
+    });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeTips(); });
+    document.addEventListener('click', event => { if (!event.target.closest('.node')) closeTips(); });
+  </script>
+</body>
+</html>
