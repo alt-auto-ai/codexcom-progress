@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CODEXCOM lean roadmap: reuse native Codex, deliver useful capabilities, fix observed issues and grow a cooperating organization.">
-  <title>CODEXCOM · Project map</title>
+  <meta name="description" content="CODEXCOM progress: proven ZEN–WIN Codex chat collaboration, planned DIR supervision, test evidence, production reliability roadmap and the separate ACTOR vision.">
+  <title>CODEXCOM · Progress, reliability roadmap &amp; ACTOR</title>
   <style>
     :root { color-scheme:dark; --paper:#111714; --ink:#e1e9e3; --muted:#9ba89f; --green:#7bc99e; --pale:#1b3025; --grey:#414d45; --later:#89958d; --amber:#e5b86d; }
     * { box-sizing:border-box; }
@@ -71,6 +71,39 @@
       footer { flex-direction:column; }
     }
     @media print { .tip,.hint { display:none; } .wrap { padding:10px; } }
+  
+    html { scroll-behavior:smooth; }
+    .section-nav { margin:20px 0; font-size:13px; }
+    .overview, .detail-section { margin:30px 0; padding:24px; border:1px solid #344339; border-radius:14px; background:#151e18; }
+    .overview h2, .detail-section h2 { font-size:21px; margin:0 0 12px; letter-spacing:-.3px; }
+    .detail-section h3 { font-size:16px; margin:22px 0 8px; }
+    .overview p, .detail-section p { margin:10px 0; }
+    .eyebrow { color:var(--green); font-size:12px; text-transform:uppercase; letter-spacing:1px; }
+    .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-top:18px; }
+    .card { padding:18px; background:#1b2820; border-radius:10px; border:1px solid #354b3c; min-width:0; }
+    .card h3 { margin:0 0 10px; font-size:16px; }
+    .badge { display:inline-block; font-size:11px; border:1px solid currentColor; padding:2px 8px; border-radius:20px; margin-bottom:10px; color:var(--green); }
+    .badge.pending { color:var(--amber); }
+    .flow { font-weight:600; line-height:1.9; color:var(--ink); }
+    .hierarchy { margin:10px 0; white-space:pre; font:14px/1.7 ui-monospace,monospace; color:var(--ink); overflow-x:auto; }
+    .table-scroll { overflow-x:auto; }
+    table { border-collapse:collapse; width:100%; font-size:13px; }
+    th, td { text-align:left; vertical-align:top; padding:13px 12px; border-bottom:1px solid #344339; }
+    th { color:var(--green); font-weight:600; }
+    caption { text-align:left; color:var(--muted); font-size:12px; margin:0 0 12px; }
+    .detail-section li { margin:8px 0; }
+    .muted { color:var(--muted); }
+    .roadmap-steps { padding-left:22px; }
+    .roadmap-steps > li { padding:10px 0 14px 8px; border-bottom:1px solid #344339; }
+    .roadmap-steps strong { color:var(--green); }
+    .map-heading { margin-top:36px; font-size:21px; }
+    @media(max-width:1000px) {
+      .overview, .detail-section { padding:18px; }
+      .cards { grid-template-columns:1fr; }
+      th, td { padding:10px 8px; min-width:130px; }
+    }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
   </style>
 </head>
 <body>
@@ -80,7 +113,43 @@
       <div class="legend" aria-label="Map legend"><span><i></i>Achieved</span><span><i class="now"></i>Current</span><span><i class="later"></i>Later</span></div>
     </header>
     <p class="hint">Use native capabilities → deliver useful work → fix observed issues → repeat.</p>
-    <p class="hint">A2.5 accepted with timing qualification · One bounded ZEN→Hub→WIN review and automatic same-thread ZEN continuation updated and verified an approved note. Next: continue Stage 08 native-progress and restart-continuity work.</p>
+    <p class="hint">Updated 4 November 2026 (Australia/Sydney). Milestone snapshot, not live service status. Bounded collaboration is proven; production reliability is not yet accepted.</p>
+    <nav class="section-nav" aria-label="Progress sections">
+      <a href="#current">Current objectives</a><a href="#project-map">Milestone map</a><a href="#evidence">Tests &amp; evidence</a><a href="#production">Reliability roadmap</a><a href="#actor">ACTOR vision</a>
+    </nav>
+    <section class="overview" id="current" aria-labelledby="current-title">
+      <p class="eyebrow">Working collaboration → supervised development</p>
+      <h2 id="current-title">The route works. DIR supervision is next.</h2>
+      <p>CODEXCOM connects native Codex agents across machines while preserving their visible conversations. The latest accepted pilot completed useful work without the owner relaying messages between turns.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="badge">LIVE PILOT PASSED</span>
+          <h3>ZEN ↔ CODEXCOM ↔ WIN</h3>
+          <p class="flow">ZEN · Windows laptop<br>↕ CODEXCOM Hub · Ubuntu<br>WIN · Windows VM</p>
+          <p>ZEN requested a review, WIN returned it, and ZEN automatically continued in its original VS Code Codex conversation. ZEN then edited the approved note and verified its saved content.</p>
+          <p>Exactly three correlated tasks, complete accepted results and all three local worker acknowledgements were confirmed. No owner message relay occurred between turns.</p>
+          <p class="muted">The earlier request/result pilot also passed. The first continuation run left the file unchanged because of a restrictive prompt; the corrected second run completed the edit. Worker exit codes were not captured.</p>
+        </article>
+        <article class="card">
+          <span class="badge pending">CURRENT · PREPARATION</span>
+          <h3>DIR supervises WRX and WIN</h3>
+          <pre class="hierarchy" aria-label="Owner oversees DIR; DIR supervises both WRX and WIN">Owner
+  └─ DIR · coordinator
+       ├─ WRX · Ubuntu operator
+       └─ WIN · Windows operator</pre>
+          <p>DIR reports to the owner and directs both operators. WRX and WIN can collaborate with each other within the approved objective. DIR is superior to both; this is not a permanent WRX-over-WIN hierarchy.</p>
+          <p>Planned pilot: DIR → WRX → WIN → WRX → DIR. Five native turns, four Hub tasks; the initial owner-started DIR turn uses a reserved slot.</p>
+          <p class="muted">Candidate source and focused checks exist; this hierarchy has not run live. Resolve WRX’s workspace binding, finish relevant Windows checks, then configure scoped access and activate the reviewed candidate.</p>
+        </article>
+      </div>
+      <h3>What carries the messages?</h3>
+      <p>Codex’s MCP client calls the CODEXCOM MCP server. Authenticated requests reach the Ubuntu Hub through SSH tunnels; workers use native Codex queue and observation mechanisms to deliver work into extension-owned chats and report results. The controller schedules a correlated continuation after the required completion evidence.</p>
+      <p>The implementation uses a TypeScript/Node.js Hub and workers, HTTP APIs, WebSocket events, SQLite persistence and local worker journals. Sharing one Codex account does not connect the chats automatically. The temporary Shared folder carries setup artifacts only.</p>
+      <p class="muted">DIR and WRX execute on Ubuntu through remote VS Code workspaces displayed on the laptop. ZEN executes locally on the laptop; WIN executes locally in the VM. A directory selects a workspace; it does not by itself establish a security boundary.</p>
+      <p><strong>Last reported operating posture:</strong> services stopped following the owner’s shutdown, dispatch hold persisted, no pending work and historical records preserved. Hub automatic startup was disabled; workers and SSH tunnels were manually launched. This page does not poll runtime health.</p>
+    </section>
+    <h2 class="map-heading" id="project-map">Milestones already reached and original roadmap</h2>
+    <p class="hint">Earlier milestones retain their original scope and qualifications. Select a node for its evidence summary. The current execution sequence is detailed below.</p>
     <main class="map" aria-label="Project roadmap">
       <svg class="routes" viewBox="0 0 1000 1300" preserveAspectRatio="none" aria-hidden="true">
         <path class="travelled" d="M150 80 H850"/>
@@ -404,9 +473,87 @@
         </li>
       </ol>
     </main>
+
+    <section class="detail-section" id="evidence" aria-labelledby="evidence-title">
+      <h2 id="evidence-title">Achievements and test evidence</h2>
+      <p>Live task results, offline fixtures and source validation are different kinds of evidence. Counts below describe separate revisions and runs; they are not a cumulative test total.</p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable evidence table">
+        <table>
+          <caption>Sanitized summary of retained milestone records and operator receipts, through 4 November 2026.</caption>
+          <thead><tr><th scope="col">Capability</th><th scope="col">Observed evidence</th><th scope="col">Scope / qualification</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Cross-platform foundation</th><td>Ubuntu and Windows task/result exchange; persistent identities and conversations; long-running work exceeding 26 minutes with approvals.</td><td>Retained earlier live milestones. Not a general availability or latency guarantee.</td></tr>
+            <tr><th scope="row">Parallel and dependent work</th><td>Parallel contributions, dependent investigations, three-agent feature delivery, specialist-initiated review and use of correlated answers.</td><td>A2.1–A2.4 evidence retained in the map. Does not establish the new DIR hierarchy.</td></tr>
+            <tr><th scope="row">Completion reporting</th><td>Correction preserves native status and waits for the complete correlated answer instead of freezing partial or empty history. Failed/interrupted handling retained.</td><td>Integrated Windows checks passed in the earlier correction campaign.</td></tr>
+            <tr><th scope="row">Original A2.5 timing</th><td>Useful review and a new turn in the same initiating conversation completed.</td><td>The review finished before the initial ACK. The stricter post-ACK review timing condition was not demonstrated; later successes do not rewrite that record.</td></tr>
+            <tr><th scope="row">Network boundaries</th><td>Five distinct offline cases passed on Ubuntu and Windows across HTTP, WebSocket, SQLite, worker-process continuity and UTF-8 status handling.</td><td>Fixtures and offline qualification. Live same-identity Hub/worker restart recovery remains a separate gate.</td></tr>
+            <tr><th scope="row">VS Code chat connectivity</th><td>Authenticated MCP discovery from both Windows chats; local native queue delivery visibly continued each selected extension chat. WIN read-only App Server initialization, thread read, queue and turn queries passed.</td><td>Discovery alone does not prove delivery. Those prerequisites were followed by the live correlated pilots.</td></tr>
+            <tr><th scope="row">ZEN → WIN request/result</th><td>One real Hub request reached the selected WIN extension chat; complete reply returned to ZEN; native completion, report acceptance and local ACK confirmed.</td><td>Passed. ZEN’s result retrieval in this first pilot was owner-prompted.</td></tr>
+            <tr><th scope="row">Automatic useful continuation</th><td>Exactly one parent, one WIN review and one same-thread ZEN continuation. All three local ACKs confirmed; approved note changed and saved content/hash verified.</td><td>Latest bounded note-edit pilot passed without an owner relay between turns. First run’s file-edit omission was corrected in a new attempt.</td></tr>
+            <tr><th scope="row">Idle and ACK verification</th><td>Corrected inspector distinguishes historical interruptions from current activity. Nine focused Ubuntu checks passed; Windows snapshots verified the pilot targets, empty queues and ACKs.</td><td>Owner confirmed chat idleness where an isolated native connection reported notLoaded. This is not proof that every runtime on a machine is idle.</td></tr>
+            <tr><th scope="row">Session admission / drain source</th><td>Ubuntu integrated control baseline: 613 tests passed, 7 skipped, plus typecheck, build and specification checks. Two Windows timing fixtures received measured, test-only corrections.</td><td>Source evidence; owner-session controls are not deployed. Directory roots and Hub tokens alone do not constrain all native RPC or OS access.</td></tr>
+            <tr><th scope="row">Windows approval gate</th><td>Earlier corrected group: 94 passed, one approval-case timeout. The named gate now passes on the supervision candidate: two approvals, one native execution and terminal ACK, without timeout changes.</td><td>The latest focused pass resolves that named gate. It is not a new full-suite pass or a live hierarchy result.</td></tr>
+            <tr><th scope="row">Five-turn DIR candidate</th><td>33 focused Ubuntu tests, typecheck, build and specification checks passed; owner-run build also confirmed.</td><td>Prepared only. Workspace binding, scoped MCP setup, remaining changed-path Windows evidence and live activation remain outstanding.</td></tr>
+            <tr><th scope="row">Preservation and closeout</th><td>Latest reported database integrity passed: 41 retained tasks, no pending work, and historical uncertain work preserved. Dispatch hold confirmed after pilots; owners stopped workers.</td><td>Worker exit codes were not captured. Subsequent device shutdown was expected; automatic startup was not configured.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">Private execution records remain the source of detailed evidence. This public page intentionally omits task/thread IDs, credentials, private paths, addresses, transcripts and source-repository links.</p>
+    </section>
+
+    <section class="detail-section" id="production" aria-labelledby="production-title">
+      <h2 id="production-title">Roadmap to CODEXCOM production reliability</h2>
+      <p><strong>Method:</strong> execute a small useful workload → inspect observed failures → make the smallest correction → rerun the affected step. Reuse passing evidence, avoid broad repeated campaigns, and preserve uncertain work instead of blindly replaying it.</p>
+      <ol class="roadmap-steps">
+        <li><strong>Current — complete DIR supervision.</strong> Bind the exact DIR and WRX chats to their approved workspaces, retain WIN’s proven chat, configure role-scoped MCP credentials, qualify changed enforcement paths and activate the reviewed build. Prove the five-turn delegation/review/continuation/report loop with one useful artifact.</li>
+        <li><strong>Owner-controlled work sessions.</strong> Prove closed-by-default admission, owner-only session start, DIR admission/drain controls within that grant, expiry and task/turn budgets. Cover every controller/worker continuation and prevent self-granted sessions. Distinguish normal drain from emergency cancellation; the initial manual UI turn’s reserved slot is accounting, not a technical block on additional human UI input.</li>
+        <li><strong>Native progress, requests and “Ask and continue”.</strong> Finish Stage 08 live observation and expose the actual pending approval or clarification with stable identity and scope. Distinguish native execution, accepted report and local ACK; retain unknown when unobserved. Prove approve, deny, delayed response and continuation without confusing denial with task cancellation.</li>
+        <li><strong>Delivery and dependency reliability.</strong> Prove duplicate suppression, correlation, ordering tolerance, complete-result requirements, cancellation races and stale-binding rejection under useful workloads. Exercise missing/late results and uncertain submission without blind replay. Integrate dependency review and final coordinator reporting.</li>
+        <li><strong>Recovery across OS and machine boundaries.</strong> Demonstrate same-identity Hub/worker restart, tunnel loss/reconnect, lease recovery, process interruption, report retry and continued observation of extension-owned work. Reconcile ambiguous outcomes before resubmission; preserve history and quarantine.</li>
+        <li><strong>Authority and confinement.</strong> Validate project boundaries with native sandbox and OS enforcement, credential isolation for co-located roles, least-privilege tools, token rotation/revocation and escalation to the owner for privileged actions. Test that peer content cannot grant authority or escape the approved objective.</li>
+        <li><strong>Bounded scale and economical operation.</strong> Exercise concurrent operators, backpressure, per-agent limits, long waits and larger context using small representative tasks. Record latency, failure rates and token/usage data where available. Use the cheapest capable available models, preserve manual settings and escalate model capability only when measured need justifies it.</li>
+        <li><strong>Operational release acceptance.</strong> Verify reproducible cross-platform builds, native-version compatibility, dependency setup, backup/restore, contract/data migrations, rollback, sanitized diagnostics and controlled startup/shutdown. Run a representative workload through failure and recovery before accepting production operation; add unattended startup only with explicit owner policy.</li>
+      </ol>
+      <h3>Release decision</h3>
+      <p>Production readiness requires passing evidence for authorized execution, correct results, durable acknowledgement, recovery, confinement and owner control on the supported topology. No completion percentage or reliability guarantee is inferred from a single pilot or test count.</p>
+      <p>The owner authorizes work sessions; DIR coordinates within them and reports progress, blockers and consequential decisions. The intended supervisor can start or stop operators within that authorization, but cannot open its own owner session. Further-agent lifecycle control remains to be proven.</p>
+    </section>
+
+    <section class="detail-section" id="actor" aria-labelledby="actor-title">
+      <p class="eyebrow">Separate future project · enduring direction</p>
+      <h2 id="actor-title">ACTOR — Autonomous Autopoietic AI Organisation</h2>
+      <p><strong>Make the organisation the persistent entity.</strong> Agents, models and runtimes should be replaceable without losing the organisation’s identity, authority, relationships, knowledge or accumulated experience.</p>
+      <p>CODEXCOM remains its own communication and reliability project. Its validated mechanisms are a stepping stone for ACTOR, whose initial emphasis is multiple specialist agents on one Ubuntu workstation, with cross-machine and cross-OS operation available as a later scalability option.</p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="ACTOR architecture layers">
+        <table>
+          <caption>Proposed ACTOR architecture — vision, not implemented CODEXCOM capability.</caption>
+          <thead><tr><th scope="col">Layer</th><th scope="col">Responsibility</th><th scope="col">Expected stability</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Skeleton</th><td>Viable System Model (VSM) functions, recursive units, stable identities, channel contracts and authority boundaries.</td><td>High; deliberate, versioned evolution.</td></tr>
+            <tr><th scope="row">Organs</th><td>Replaceable agents, specialist capabilities, context processors, memory systems and workflows.</td><td>Adaptable.</td></tr>
+            <tr><th scope="row">Metabolism</th><td>Task execution, information processing, regulatory feedback, learning and optimisation.</td><td>Continuously evolving.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Durable institutional kernel</h3>
+      <p>Own the organisational registry, role identities, channel definitions, authority rules, durable event history and lifecycle management. Build in versioned contracts, migrations and recovery so foundational change can be rare and controlled.</p>
+      <ul>
+        <li>Recursive organisational structure with consistent principles at each viable unit.</li>
+        <li>Stable communication semantics independent of the participating agent implementation.</li>
+        <li>Persistent institutional memory for knowledge, decisions, outcomes and history.</li>
+        <li>Explicit purpose, responsibility, permissions and escalation boundaries.</li>
+        <li>Continuous feedback that detects deviations and supports correction and adaptation.</li>
+        <li>Controlled introduction, evaluation and incorporation of new capabilities.</li>
+      </ul>
+      <h3>What CODEXCOM can contribute</h3>
+      <p>Native Codex execution, visible persistent chat workplaces, correlated task/result contracts, automatic continuation, cross-platform worker adapters and durable journals. Supervision, owner-session gates, safe drain, recovery and observability will become reusable mechanisms as their respective proofs are completed.</p>
+      <p>Dedicated chats and directories provide owner-visible workplaces for observing and guiding agents. They are not substitutes for access control or institutional memory. A permanent organisational role should retain its purpose, authority and evaluated experience across replacement agents.</p>
+      <p><strong>NATS / JetStream:</strong> planned for ACTOR channels where suitable. It is not the transport used by the demonstrated CODEXCOM pilots, and no NATS integration is claimed here. Codex remains the intended agent execution platform.</p>
+    </section>
+
     <footer>
       <p>4 Nov 2026 · Milestone snapshot; not live runtime status.</p>
-      <p>Updated at milestone checkpoints.</p>
+      <p>Public summary only · Private implementation repositories remain private.</p>
     </footer>
   </div>
   <script>
